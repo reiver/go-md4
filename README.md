@@ -18,7 +18,7 @@ Here is an example of using package md4:
 ```go
 import "github.com/reiver/go-md4"
 
-//
+// ...
 
 var data []byte = []byte("Hello world!")
 
