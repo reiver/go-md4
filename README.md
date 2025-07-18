@@ -20,7 +20,6 @@ import "github.com/reiver/go-md4"
 
 //
 
-
 var data []byte = []byte("Hello world!")
 
 digest := md4.Sum(data)
