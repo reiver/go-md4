@@ -4,19 +4,19 @@ import (
 	"encoding/binary"
 )
 
-// md4Transform is an implementation of "MD4Transform" from IETF RFC-1320.
+// md4transform is an implementation of "MD4Transform" from IETF RFC-1320.
 //
 // https://datatracker.ietf.org/doc/html/rfc1320
 //
-// md4Transform implements the "MD4 basic transformation".
+// md4transform implements the "MD4 basic transformation".
 //
 // Although NOTE that this returns `a`, `b`, `c`, and `d` rather than
 // adding them to the state.
 //
-// (That is where this implementation of md4Transform differs from IETF RFC-1320.)
+// (That is where this implementation of md4transform differs from IETF RFC-1320.)
 //
 // That adding is done outside of this function.
-func md4Transform(state [4]uint32, data []byte) (a uint32, b uint32, c uint32, d uint32) {
+func md4transform(state [4]uint32, data []byte) (a uint32, b uint32, c uint32, d uint32) {
 
 	var x [16]uint32
 
