@@ -11,6 +11,9 @@ func ExampleNew() {
 
 	hasher := md4.New()
 
+	// “Yesterday I was clever, so I wanted to change the world. Today I am wise, so I am changing myself.”
+	// ⸺ Rumi
+
 	io.WriteString(hasher, "“")
 	io.WriteString(hasher, "Yesterday I was clever, so I wanted to change the world.")
 	io.WriteString(hasher, " ")
@@ -19,6 +22,7 @@ func ExampleNew() {
 	io.WriteString(hasher, "\n")
 	io.WriteString(hasher, "”")
 	io.WriteString(hasher, "⸺")
+	io.WriteString(hasher, " ")
 	io.WriteString(hasher, "Rumi")
 
 	digest := hasher.Sum(nil)
@@ -26,5 +30,5 @@ func ExampleNew() {
 	fmt.Printf("MD4-DIGEST: 0x%032X\n", digest)
 
 	// Output:
-	// MD4-DIGEST: 0xBA9C0BB33CB7BE15D5000F02A34FACB2
+	// MD4-DIGEST: 0xA2D6BDF512B93A4DAD4556D8F9495E5B
 }
