@@ -25,6 +25,29 @@ var data []byte = []byte("Hello world!")
 digest := md4.Sum(data)
 ```
 
+Here is a more complex example of putting data into the an MD4 hasher in multiple pieces.
+
+```go
+import "github.com/reiver/go-md4"
+
+// ...
+
+hasher := md4.New()
+
+// This is equivalent to writing:
+//
+//	[]byte("once+twice-thrice_fource")
+hasher.Write([]byte("once"))
+hasher.Write([]byte("+"))
+hasher.Write([]byte("twice"))
+hasher.Write([]byte("-"))
+hasher.Write([]byte("thrice"))
+hasher.Write([]byte("_"))
+hasher.Write([]byte("fource"))
+
+digest := hasher.Sum(nil)
+```
+
 ## Import
 
 To import package **md4** use `import` code like the following:
