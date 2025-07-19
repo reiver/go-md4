@@ -79,7 +79,7 @@ func (hasher) Size() int {
 //
 // Sum appends the the digest to `p` (rather than just returning the digest).
 //
-// To have Sum return the digest, pass nil to Sun.
+// To have Sum return the digest, pass nil to Sum.
 // For example:
 //
 //	digest := hasher.Sum(nil)
