@@ -17,6 +17,31 @@ type hasher struct {
 
 var _ hash.Hash = &hasher{}
 
+// BlockSize returns the size of the MD4 block measured in byte.
+//
+// Size will always return 64.
+//
+// So, the size of the MD4 block is 64 bytes (i.e., 512 bits).
+func (hasher) BlockSize() int {
+	return BlockSize
+}
+
+// processBlock processes a single 64-byte (i.e., 512-bit) block by using the MD4 "MD4Transform" function.
+func (receiver *hasher) processBlock(data []byte) {
+	if nil == receiver {
+		return
+	}
+
+	data = data[:BlockSize]
+
+	a, b, c, d := md4transform(receiver.state, data)
+
+	receiver.state[0] += a
+	receiver.state[1] += b
+	receiver.state[2] += c
+	receiver.state[3] += d
+}
+
 // Reset resets hasher to the initial state,
 // as per how it is defined in IETF RFC-1320.
 //
@@ -48,52 +73,6 @@ func (receiver *hasher) Reset() {
 // So, the size of the MD4 digest is 16 bytes (i.e., 128 bits).
 func (hasher) Size() int {
 	return Size
-}
-
-// BlockSize returns the size of the MD4 block measured in byte.
-//
-// Size will always return 64.
-//
-// So, the size of the MD4 block is 64 bytes (i.e., 512 bits).
-func (hasher) BlockSize() int {
-	return BlockSize
-}
-
-// Write puts in more data into the ongoing MD4 hasher.
-//
-// Write makes hasher match the io.Writer interface.
-func (receiver *hasher) Write(p []byte) (n int, err error) {
-	if nil == receiver {
-		return 0, errNilReceiver
-	}
-
-	n = len(p)
-	receiver.length += uint64(n)
-
-	if receiver.index > 0 {
-		numCopied := copy(receiver.buffer[receiver.index:], p)
-		receiver.index += numCopied
-		if receiver.index == BlockSize {
-			receiver.processBlock(receiver.buffer[:])
-			receiver.index = 0
-		}
-		p = p[numCopied:]
-	}
-
-	for len(p) >= BlockSize {
-
-		// .processBlock() will only process the first 64 bytes of the slise,
-		// so do NOT need to make the slice passed to .processBlock() be
-		// exactly 64 bytes.
-		receiver.processBlock(p)
-		p = p[BlockSize:]
-	}
-
-	if len(p) > 0 {
-		receiver.index = copy(receiver.buffer[:], p)
-	}
-
-	return
 }
 
 // Sum appends the MD4 digest of the data that had been written to the hasher so far.
@@ -165,18 +144,39 @@ func (receiver *hasher) sum() [Size]byte {
 	return digest
 }
 
-// processBlock processes a single 64-byte (i.e., 512-bit) block by using the MD4 "MD4Transform" function.
-func (receiver *hasher) processBlock(data []byte) {
+// Write puts in more data into the ongoing MD4 hasher.
+//
+// Write makes hasher match the io.Writer interface.
+func (receiver *hasher) Write(p []byte) (n int, err error) {
 	if nil == receiver {
-		return
+		return 0, errNilReceiver
 	}
 
-	data = data[:BlockSize]
+	n = len(p)
+	receiver.length += uint64(n)
 
-	a, b, c, d := md4transform(receiver.state, data)
+	if receiver.index > 0 {
+		numCopied := copy(receiver.buffer[receiver.index:], p)
+		receiver.index += numCopied
+		if receiver.index == BlockSize {
+			receiver.processBlock(receiver.buffer[:])
+			receiver.index = 0
+		}
+		p = p[numCopied:]
+	}
 
-	receiver.state[0] += a
-	receiver.state[1] += b
-	receiver.state[2] += c
-	receiver.state[3] += d
+	for len(p) >= BlockSize {
+
+		// .processBlock() will only process the first 64 bytes of the slise,
+		// so do NOT need to make the slice passed to .processBlock() be
+		// exactly 64 bytes.
+		receiver.processBlock(p)
+		p = p[BlockSize:]
+	}
+
+	if len(p) > 0 {
+		receiver.index = copy(receiver.buffer[:], p)
+	}
+
+	return
 }
