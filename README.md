@@ -13,7 +13,7 @@ Online documentation, which includes examples, can be found at: http://godoc.org
 
 ## Examples
 
-Here is an example of using package md4:
+Here is a simple example of calculating the MD4 digest of data contained in a `[]byte`:
 
 ```go
 import "github.com/reiver/go-md4"
