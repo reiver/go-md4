@@ -13,7 +13,6 @@ func ExampleNew() {
 
 	// “Yesterday I was clever, so I wanted to change the world. Today I am wise, so I am changing myself.”
 	// ⸺ Rumi
-
 	io.WriteString(hasher, "“")
 	io.WriteString(hasher, "Yesterday I was clever, so I wanted to change the world.")
 	io.WriteString(hasher, " ")
